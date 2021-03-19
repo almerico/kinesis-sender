@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.iterate</groupId>
+	<artifactId>kinesis-sender</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+	<name>kinesis-sender</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<aws-java-sdk.version>1.11.700</aws-java-sdk.version>
+	</properties>
+
+	<dependencies>
+<!--		<dependency>-->
+<!--			<groupId>com.amazonaws</groupId>-->
+<!--			<artifactId>aws-java-sdk-s3</artifactId>-->
+<!--			<version>${aws-java-sdk.version}</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>com.amazonaws</groupId>-->
+<!--			<artifactId>aws-java-sdk-iam</artifactId>-->
+<!--			<version>${aws-java-sdk.version}</version>-->
+<!--		</dependency>-->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-core</artifactId>
+			<version>${aws-java-sdk.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-kinesis</artifactId>
+			<version>${aws-java-sdk.version}</version>
+		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.amazonaws</groupId>-->
+<!--			<artifactId>aws-java-sdk</artifactId>-->
+<!--			<version>${aws-java-sdk.version}</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.amazonaws</groupId>-->
+<!--			<artifactId>aws-java-sdk-sts</artifactId>-->
+<!--			<version>${aws-java-sdk.version}</version>-->
+<!--		</dependency>-->
+	</dependencies>
+
+<!--	<build>-->
+<!--		<pluginManagement>&lt;!&ndash; lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) &ndash;&gt;-->
+<!--			<plugins>-->
+<!--				&lt;!&ndash; clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle &ndash;&gt;-->
+<!--&lt;!&ndash;				<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>maven-clean-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<version>3.1.0</version>&ndash;&gt;-->
+<!--&lt;!&ndash;				</plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;				&lt;!&ndash; default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;				<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>maven-resources-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<version>3.0.2</version>&ndash;&gt;-->
+<!--&lt;!&ndash;				</plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;				<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>maven-compiler-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<version>3.8.0</version>&ndash;&gt;-->
+<!--&lt;!&ndash;				</plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;				<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>maven-surefire-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<version>2.22.1</version>&ndash;&gt;-->
+<!--&lt;!&ndash;				</plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;				<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>maven-jar-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<version>3.0.2</version>&ndash;&gt;-->
+<!--&lt;!&ndash;					<configuration>&ndash;&gt;-->
+<!--&lt;!&ndash;						<archive>&ndash;&gt;-->
+<!--&lt;!&ndash;							<manifest>&ndash;&gt;-->
+<!--&lt;!&ndash;								<addClasspath>true</addClasspath>&ndash;&gt;-->
+<!--&lt;!&ndash;								<classpathPrefix>lib/</classpathPrefix>&ndash;&gt;-->
+<!--&lt;!&ndash;								<mainClass>com.iterate.SenderToKinesis</mainClass>&ndash;&gt;-->
+<!--&lt;!&ndash;							</manifest>&ndash;&gt;-->
+<!--&lt;!&ndash;						</archive>&ndash;&gt;-->
+<!--&lt;!&ndash;					</configuration>&ndash;&gt;-->
+<!--&lt;!&ndash;				</plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;				<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>maven-install-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<version>2.5.2</version>&ndash;&gt;-->
+<!--&lt;!&ndash;				</plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;				<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>maven-deploy-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<version>2.8.2</version>&ndash;&gt;-->
+<!--&lt;!&ndash;				</plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;				&lt;!&ndash; site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;				<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>maven-site-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<version>3.7.1</version>&ndash;&gt;-->
+<!--&lt;!&ndash;				</plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;				<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;					<artifactId>maven-project-info-reports-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;					<version>3.0.0</version>&ndash;&gt;-->
+<!--&lt;!&ndash;				</plugin>&ndash;&gt;-->
+<!--				<plugin>-->
+<!--					<artifactId>maven-assembly-plugin</artifactId>-->
+<!--					<configuration>-->
+<!--						<archive>-->
+<!--							<manifest>-->
+<!--								<mainClass>com.sender.SenderToKinesis</mainClass>-->
+<!--							</manifest>-->
+<!--						</archive>-->
+<!--						<descriptorRefs>-->
+<!--							<descriptorRef>jar-with-dependencies</descriptorRef>-->
+<!--						</descriptorRefs>-->
+<!--					</configuration>-->
+<!--				</plugin>-->
+<!--			</plugins>-->
+<!--		</pluginManagement>-->
+<!--	</build>-->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>
+										com.sender.SenderToKinesis
+									</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
