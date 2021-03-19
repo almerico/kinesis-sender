@@ -21,9 +21,11 @@ jobs:
           docker push $IMAGE_NAME:latest
       - name: start_test
         run: |
-         cmd="docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} --env AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} --env NUMBER_SENDER_THREADS=${{ secrets.NUMBER_SENDER_THREADS }} --env NUMBER_SENDER_RECORDS=${{ secrets.NUMBER_SENDER_RECORDS }} --env DELIVERY_STREAM_NAME=${{ secrets.DELIVERY_STREAM_NAME }}   --env SENDER_DEBUG_IS_ON=${{ secrets.SENDER_DEBUG_IS_ON }} $IMAGE_NAME:latest"
-         echo $cmd
-         sh -c $cmd
+         #cmd="docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} --env AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} --env NUMBER_SENDER_THREADS=${{ secrets.NUMBER_SENDER_THREADS }} --env NUMBER_SENDER_RECORDS=${{ secrets.NUMBER_SENDER_RECORDS }} --env DELIVERY_STREAM_NAME=${{ secrets.DELIVERY_STREAM_NAME }}   --env SENDER_DEBUG_IS_ON=${{ secrets.SENDER_DEBUG_IS_ON }} $IMAGE_NAME:latest"
+         echo docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}  --env AWS_DEFAULT_REGION=us-east-1  --env NUMBER_SENDER_THREADS=2  --env NUMBER_SENDER_RECORDS=500 --env DELIVERY_STREAM_NAME=loadtest  --env SENDER_DEBUG_IS_ON=false almerico/kinesis-sender
+         docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}  --env AWS_DEFAULT_REGION=us-east-1  --env NUMBER_SENDER_THREADS=2  --env NUMBER_SENDER_RECORDS=500 --env DELIVERY_STREAM_NAME=loadtest  --env SENDER_DEBUG_IS_ON=false almerico/kinesis-sender
+         #echo $cmd
+         #sh -c $cmd
       - name : Find diff
         if: contains(github.ref, 'main')
         run: |
