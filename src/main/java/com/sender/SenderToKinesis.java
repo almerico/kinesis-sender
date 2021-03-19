@@ -21,6 +21,8 @@ public class SenderToKinesis {
 								   + "export AWS_SECRET_ACCESS_KEY=xxx\n"
 								   + "export AWS_DEFAULT_REGION=us-east-1\n"
 								   + "export NUMBER_SENDER_THREADS=50\n"
+								   + "export NUMBER_SENDER_SENDS=10\n"
+				                   + "export MILISECONDS_BETWEEN_SENDS=100\n"
 								   + "export NUMBER_SENDER_RECORDS=500    HERE LIMITATION IS 500\n"
 								   + "export DELIVERY_STREAM_NAME=loadtest\n"
 								   + "export SENDER_DEBUG_IS_ON=false\n");
@@ -29,6 +31,8 @@ public class SenderToKinesis {
 	protected static AmazonKinesisFirehose firehoseClient;
 	public static int numberOfThreads = Integer.parseInt(System.getenv("NUMBER_SENDER_THREADS"));
 	public static int numberOfRecords = Integer.parseInt(System.getenv("NUMBER_SENDER_RECORDS"));
+	public static int numberOfSends = Integer.parseInt(System.getenv("NUMBER_SENDER_SENDS"));
+	public static int millisecondsBetweenSends = Integer.parseInt(System.getenv("MILISECONDS_BETWEEN_SENDS"));
 	public static String deliveryStreamName = System.getenv("DELIVERY_STREAM_NAME");
 	public static boolean debugIsOn = Boolean.parseBoolean(System.getenv("SENDER_DEBUG_IS_ON"));
 	public static String region = System.getenv("AWS_DEFAULT_REGION");
@@ -79,12 +83,18 @@ public class SenderToKinesis {
 	}
 
 	private static class ParallelTask implements Runnable {
-
 		@Override
 		public void run() {
 			System.out.println(Thread.currentThread().getName()
 									   + " is executing this code " + Thread.currentThread());
-			sendBatch(numberOfRecords);
+			for (int i = 0; i < numberOfSends; i++) {
+				try {
+					Thread.sleep(millisecondsBetweenSends);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				sendBatch(numberOfRecords);
+			}
 		}
 	}
 
