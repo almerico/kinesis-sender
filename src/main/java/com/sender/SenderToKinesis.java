@@ -96,7 +96,7 @@ public class SenderToKinesis {
 				.build();
 		PutRecordBatchRequest putRecordBatchRequest = new PutRecordBatchRequest();
 		putRecordBatchRequest.setDeliveryStreamName(deliveryStreamName);
-		List<Record> recordList = prepareData(500);
+		List<Record> recordList = prepareData(numberOfRecords);
 		putRecordBatchRequest.setRecords(recordList);
 		firehoseClient.putRecordBatch(putRecordBatchRequest);
 		recordList.clear();
