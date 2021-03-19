@@ -29,7 +29,6 @@ jobs:
           --env NUMBER_SENDER_RECORDS=${{ secrets.NUMBER_SENDER_RECORDS }} \
           --env DELIVERY_STREAM_NAME=${{ secrets.DELIVERY_STREAM_NAME }} \
           --env SENDER_DEBUG_IS_ON=${{ secrets.SENDER_DEBUG_IS_ON }} ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$GITHUB_RUN_ID
-
       - name : Find diff
         if: contains(github.ref, 'main')
         run: |
