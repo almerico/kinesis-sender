@@ -22,28 +22,5 @@ jobs:
       - name: start_test
         run: |
          #cmd="docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} --env AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} --env NUMBER_SENDER_THREADS=${{ secrets.NUMBER_SENDER_THREADS }} --env NUMBER_SENDER_RECORDS=${{ secrets.NUMBER_SENDER_RECORDS }} --env DELIVERY_STREAM_NAME=${{ secrets.DELIVERY_STREAM_NAME }}   --env SENDER_DEBUG_IS_ON=${{ secrets.SENDER_DEBUG_IS_ON }} $IMAGE_NAME:latest"
-         echo docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}  --env AWS_DEFAULT_REGION=us-east-1  --env NUMBER_SENDER_THREADS=2  --env NUMBER_SENDER_RECORDS=500 --env DELIVERY_STREAM_NAME=loadtest  --env SENDER_DEBUG_IS_ON=false almerico/kinesis-sender
-         docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}  --env AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} --env NUMBER_SENDER_THREADS=10  --env NUMBER_SENDER_RECORDS=500 --env DELIVERY_STREAM_NAME=loadtest  --env SENDER_DEBUG_IS_ON=false $IMAGE_NAME:latest
-         #echo $cmd
-         #sh -c $cmd
-      - name : Find diff
-        if: contains(github.ref, 'release')
-        run: |
-         echo "### changes from previous tag:">diff.md
-         git log $(git tag --sort version:refname | tail -n 2 | head -n 1)..$(git tag --sort version:refname | tail -n 1) >> diff.md
-         cat diff.md
-      - name: Create Release
-        if: contains(github.ref, 'release')
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} 
-        with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
-          body_path: diff.md
-          draft: false
-          prerelease: false    
-      - name: Updatebot
-        if: contains(github.ref, 'release')
-        run: updatebot push-regex -r "\s+tag:\s(.*)" -v  "$GITHUB_RUN_ID" --previous-line "\s+repository:.*/almerico/kinesis-sender" **/values.yaml
+         echo docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}  --env AWS_DEFAULT_REGION=us-east-1  --env NUMBER_SENDER_THREADS=2  --env NUMBER_SENDER_RECORDS=500 --env DELIVERY_STREAM_NAME=loadtest  --env SENDER_DEBUG_IS_ON=false  almerico/kinesis-sender
+         docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}  --env AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} --env NUMBER_SENDER_THREADS=10  --env NUMBER_SENDER_RECORDS=500 --env DELIVERY_STREAM_NAME=loadtest  --env SENDER_DEBUG_IS_ON=false --env NUMBER_SENDER_SENDS=100 --env MILISECONDS_BETWEEN_SEND=100  $IMAGE_NAME:latest
