@@ -27,13 +27,13 @@ jobs:
          #echo $cmd
          #sh -c $cmd
       - name : Find diff
-        if: contains(github.ref, 'main')
+        if: contains(github.ref, 'release')
         run: |
          echo "### changes from previous tag:">diff.md
          git log $(git tag --sort version:refname | tail -n 2 | head -n 1)..$(git tag --sort version:refname | tail -n 1) >> diff.md
          cat diff.md
       - name: Create Release
-        #if: contains(github.ref, 'release')
+        if: contains(github.ref, 'release')
         id: create_release
         uses: actions/create-release@v1
         env:
