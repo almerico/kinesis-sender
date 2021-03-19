@@ -36,3 +36,15 @@ jobs:
           context: .
           push: true
           tags: almerico/kinesis-sender:latest
+      -
+        name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+      - uses: addnab/docker-run-action@v3
+        
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          registry: docker.io
+          image: almerico/kinesis-sender:latest
+          run: java -jar /kinesis-sender-1.0-SNAPSHOT.jar 
+        
