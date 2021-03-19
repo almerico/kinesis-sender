@@ -13,28 +13,13 @@ jobs:
     if: github.event_name == 'push'
     steps:
       - uses: actions/checkout@v2
-      - name: Prepare Infrastructure
-        run: |
-          echo ${{ secrets.GH_USER }}:${{ secrets.GH_TOKEN}}
-          echo -e "https://${{ secrets.GH_USER }}:${{ secrets.GH_TOKEN}}@github.com" >>  ~/.git-credentials
-          mkdir  $HOME/tmp
-          ls
-          curl -Ls https://github.com/jenkins-x/jx-release-version/releases/download/v${JX_RELEASE_VERSION}/jx-release-version_${JX_RELEASE_VERSION}_linux_amd64.tar.gz|  tar xvz -C $HOME/tmp;
-          curl -Ls -o $HOME/tmp/updatebot.jar   https://repo1.maven.org/maven2/io/jenkins/updatebot/updatebot/${UPDATEBOT_VERSION}/updatebot-${UPDATEBOT_VERSION}.jar
-          sudo cp $HOME/tmp/jx-release-version /usr/bin/jx-release-version
-          sudo cp $HOME/tmp/updatebot.jar  /usr/bin/updatebot.jar
-          echo "java -jar /usr/bin/updatebot.jar \$@" > $HOME/tmp/updatebot
-          sudo cp $HOME/tmp/updatebot  /usr/bin/updatebot
-          sudo chmod a+x /usr/bin/updatebot
-          jx-release-version > VERSION;
-          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
       - name: Push image to GitHub Container Registry
         run: |
           echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login ${{ secrets.REGISTRY_SERVER }} --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin          
-          docker build . -t ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$(cat VERSION)
-          docker tag ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$(cat VERSION)  ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:latest
+          docker build . -t ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$GITHUB_RUN_ID
+          docker tag ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$GITHUB_RUN_ID  ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:latest
           docker images
-          docker push ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$(cat VERSION)
+          docker push ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$GITHUB_RUN_ID
           docker push ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:latest
       - name: start_test
         run: |
@@ -45,7 +30,7 @@ jobs:
           --env NUMBER_SENDER_THREADS=${{ secrets.NUMBER_SENDER_THREADS }} \
           --env NUMBER_SENDER_RECORDS=${{ secrets.NUMBER_SENDER_RECORDS }} \
           --env DELIVERY_STREAM_NAME=${{ secrets.DELIVERY_STREAM_NAME }} \
-          --env SENDER_DEBUG_IS_ON=${{ secrets.SENDER_DEBUG_IS_ON }} ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$(cat VERSION)
+          --env SENDER_DEBUG_IS_ON=${{ secrets.SENDER_DEBUG_IS_ON }} ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$GITHUB_RUN_ID
 
       - name : Find diff
         if: contains(github.ref, 'main')
@@ -67,4 +52,4 @@ jobs:
           prerelease: false    
       - name: Updatebot
         if: contains(github.ref, 'release')
-        run: updatebot push-regex -r "\s+tag:\s(.*)" -v  "$(cat VERSION)" --previous-line "\s+repository:.*/almerico/kinesis-sender" **/values.yaml
+        run: updatebot push-regex -r "\s+tag:\s(.*)" -v  "$GITHUB_RUN_ID" --previous-line "\s+repository:.*/almerico/kinesis-sender" **/values.yaml
