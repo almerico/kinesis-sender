@@ -29,14 +29,22 @@ jobs:
           echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
       - name: Push image to GitHub Container Registry
         run: |
-          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login ${{ secrets.REGISTRY_SERVER }} --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-
-          
+          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login ${{ secrets.REGISTRY_SERVER }} --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin          
           docker build . -t ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$(cat VERSION)
           docker tag ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$(cat VERSION)  ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:latest
           docker images
           docker push ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$(cat VERSION)
           docker push ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:latest
+      - name: start_test
+          docker run docker run  \                        
+          --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+          --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+          --env AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} \
+          --env NUMBER_SENDER_THREADS=${{ secrets.NUMBER_SENDER_THREADS }} \
+          --env NUMBER_SENDER_RECORDS=${{ secrets.NUMBER_SENDER_RECORDS }} \
+          --env DELIVERY_STREAM_NAME=${{ secrets.DELIVERY_STREAM_NAME }} \
+          --env SENDER_DEBUG_IS_ON=${{ secrets.SENDER_DEBUG_IS_ON }} ${{ secrets.REGISTRY_SERVER }}/$IMAGE_NAME:$(cat VERSION)
+
       - name : Find diff
         if: contains(github.ref, 'main')
         run: |
@@ -44,7 +52,7 @@ jobs:
          git log $(git tag --sort version:refname | tail -n 2 | head -n 1)..$(git tag --sort version:refname | tail -n 1) >> diff.md
          cat diff.md
       - name: Create Release
-        if: contains(github.ref, 'release')
+        #if: contains(github.ref, 'release')
         id: create_release
         uses: actions/create-release@v1
         env:
