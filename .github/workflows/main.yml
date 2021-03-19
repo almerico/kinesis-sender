@@ -18,6 +18,7 @@ jobs:
           echo ${{ secrets.GH_USER }}:${{ secrets.GH_TOKEN}}
           echo -e "https://${{ secrets.GH_USER }}:${{ secrets.GH_TOKEN}}@github.com" >>  ~/.git-credentials
           mkdir  $HOME/tmp
+          ls
           curl -Ls https://github.com/jenkins-x/jx-release-version/releases/download/v${JX_RELEASE_VERSION}/jx-release-version_${JX_RELEASE_VERSION}_linux_amd64.tar.gz|  tar xvz -C $HOME/tmp;
           curl -Ls -o $HOME/tmp/updatebot.jar   https://repo1.maven.org/maven2/io/jenkins/updatebot/updatebot/${UPDATEBOT_VERSION}/updatebot-${UPDATEBOT_VERSION}.jar
           sudo cp $HOME/tmp/jx-release-version /usr/bin/jx-release-version
