@@ -21,4 +21,4 @@ jobs:
           docker push $IMAGE_NAME:latest
       - name: start_test
         run: |
-          docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}  --env AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} --env NUMBER_SENDER_THREADS=100  --env NUMBER_SENDER_RECORDS=1 --env DELIVERY_STREAM_NAME=loadtest  --env SENDER_DEBUG_IS_ON=false --env NUMBER_SENDER_SENDS=1000 --env MILISECONDS_BETWEEN_SEND=100  $IMAGE_NAME:latest
+          docker run  --env AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} --env AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}  --env AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }} --env NUMBER_SENDER_THREADS=100  --env NUMBER_SENDER_RECORDS=1 --env DELIVERY_STREAM_NAME=loadtest  --env SENDER_DEBUG_IS_ON=false --env NUMBER_SENDER_SENDS=1000 --env MILISECONDS_BETWEEN_SENDS=100  $IMAGE_NAME:latest
