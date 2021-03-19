@@ -2,7 +2,7 @@ name: Docker
 on:
   push:
     branches:
-      - master
+      - main
 env:
   IMAGE_NAME: almerico/kinesis-sender
   UPDATEBOT_VERSION: 1.1.53
