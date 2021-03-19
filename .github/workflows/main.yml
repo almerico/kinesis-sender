@@ -66,5 +66,3 @@ jobs:
       - name: Updatebot
         if: contains(github.ref, 'release')
         run: updatebot push-regex -r "\s+tag:\s(.*)" -v  "$(cat VERSION)" --previous-line "\s+repository:.*/almerico/kinesis-sender" **/values.yaml
-
-  
